@@ -1,0 +1,20 @@
+---
+# tasks file for ansible-lighttpd
+# Lighttpd is not supported from the official CentOS repositories, 
+# let's go ahead and add the EPEL repositories to CentOS.
+
+- name: Create the repository for EPEL
+  copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo
+
+- name: Create the GPG key for EPEL
+  copy: src=RPM-GPG-KEY-EPEL-6 dest=/etc/pki/rpm-gpg
+
+# Install Lighttpd
+- name: Install lighttpd package
+  yum: pkg=lighttpd  state=present
+
+# Copy lighttpd config into place
+- name: Copy lighttpd config into place
+  template: src=lighttpd.conf.j2 dest=/etc/lighttpd/lighttpd.conf
+            owner=root group=root mode=0644
+  notify: restart lighttpd

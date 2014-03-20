@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  author: Ravi Bhure
+  description:  Lighttpd 1.4.x for RHEL/CentOS 6.x.
+  license: GPL
+  min_ansible_version: 1.4
+
+  platforms:
+  - name: EL
+    versions:
+    - 6
+  - name: CentOS
+    versions:
+    - 6
+
+  categories:
+  - web
+
+dependencies: []
