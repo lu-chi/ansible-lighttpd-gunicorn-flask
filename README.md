@@ -17,7 +17,7 @@ Role Variables
 The port on which lighttpd should be listening. Useful if you have another service (like a reverse proxy) listening on port 80
 
     vars:
- 	server_port: 80
+ 	lighttpd_server_port: 80
 
 
 Dependencies
