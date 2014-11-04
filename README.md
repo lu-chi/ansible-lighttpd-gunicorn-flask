@@ -1,7 +1,7 @@
 lighttpd-gunicorn-flask
 =========
 
-A role to install lighttpd and gunicorn and to deploy your custom flask application from github.
+An Ansible role to install lighttpd and gunicorn and to deploy your custom flask application from github.
 
 Requirements
 ------------
@@ -11,7 +11,7 @@ None
 Role Variables
 --------------
 
-# The github repo containing the python source code
+```# The github repo containing the python source code
 repo: "https://github.com/USER/REPO"
 
 # lighttpd settings
@@ -26,7 +26,7 @@ supervisor_socket: "/tmp/supervisor.sock"
 virtualenv_dir: "/var/www/html/venv_APP"
 app_dir: "/var/www/html/APP"
 media_dir: "uploads"
-
+```
 
 Dependencies
 ------------
@@ -35,10 +35,11 @@ None
 
 Example Playbook
 ----------------
-
+```
 - hosts: webserver
   roles:
   - role: lighttpd
+```
 
 License
 -------
