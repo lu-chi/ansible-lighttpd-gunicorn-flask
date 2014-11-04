@@ -11,7 +11,8 @@ None
 Role Variables
 --------------
 
-```# The github repo containing the python source code
+```
+# The github repo containing the python source code
 repo: "https://github.com/USER/REPO"
 
 # lighttpd settings
