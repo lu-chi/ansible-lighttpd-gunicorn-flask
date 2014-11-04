@@ -1,23 +1,31 @@
-Ansible Lighttpd
-========
+lighttpd-gunicorn-flask
+=========
 
-An Ansible Role that installs lighttpd 1.4.x on RHEL/CentOS 6.x.
+A role to install lighttpd and gunicorn and to deploy your custom flask application from github.
 
 Requirements
 ------------
 
-Epel repo: 
-Lighttpd is not supported from the official CentOS repositories, lets go ahead and add the EPEL repositories to CentOS.
-
-:-) No worries, if not found, we do for you.
+None
 
 Role Variables
 --------------
 
-The port on which lighttpd should be listening. Useful if you have another service (like a reverse proxy) listening on port 80
+# The github repo containing the python source code
+repo: "https://github.com/USER/REPO"
 
-    vars:
- 	lighttpd_server_port: 80
+# lighttpd settings
+server_name: "APP"
+vhosts_dir: "/etc/lighttpd/vhosts.d"
+
+# supervisor settings
+supervisor_password: "PASSWORD"
+supervisor_socket: "/tmp/supervisor.sock"
+
+# python settigns
+virtualenv_dir: "/var/www/html/venv_APP"
+app_dir: "/var/www/html/APP"
+media_dir: "uploads"
 
 
 Dependencies
@@ -25,13 +33,20 @@ Dependencies
 
 None
 
+Example Playbook
+----------------
+
+- hosts: webserver
+  roles:
+  - role: lighttpd
+
 License
 -------
 
-GPL
+GPLv2
 
 Author Information
 ------------------
-Ravi Bhure <ravibhure@gmail.com>
 
-[GitHub project page](https://github.com/ravibhure/ansible-lighttpd)
+Sebastian Gumprich
+https://www.zufallsheld.de

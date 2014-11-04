@@ -1,0 +1,20 @@
+$HTTP["host"] == "{{ansible_default_ipv4.address}}" {
+  var.server_name = "{{server_name}}"
+
+  server.name = server_name
+  server.document-root = server_root + "/html/ideensammlung/ideensammlung"
+
+
+$HTTP["url"] !~ "^/uploads/" {
+  proxy.server = ( "" => (
+                   ( "host" => "127.0.0.1", "port" => 12345 )
+                 ) )
+}
+$HTTP["url"] =~ "^/{{media_dir}}" {
+
+        alias.url = (
+            "/{{media_dir}}" => server.document-root + "/{{media_dir}}"
+        )
+
+}
+}

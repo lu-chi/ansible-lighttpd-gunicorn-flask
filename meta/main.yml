@@ -1,19 +1,14 @@
 ---
 galaxy_info:
-  author: Ravi Bhure
-  description:  Lighttpd 1.4.x for RHEL/CentOS 6.x.
-  license: GPL
-  min_ansible_version: 1.4
-
+  author: Sebastian Gumprich
+  description: 'Role to install lighttpd and gunicorn, and deploy your custom flask app from github.'
+  company: 
+  license: GPLv2
+  min_ansible_version: '1.7.1'
   platforms:
-  - name: EL
-    versions:
-    - 6
-  - name: CentOS
-    versions:
-    - 6
-
+    - name: EL
+      versions:
+        - 6
   categories:
-  - web
-
-dependencies: []
+    - web
+    - development
