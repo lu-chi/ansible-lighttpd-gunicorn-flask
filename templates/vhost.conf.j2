@@ -1,13 +1,13 @@
-$HTTP["host"] == "{{ansible_default_ipv4.address}}" {
+$HTTP["host"] == "{{lgf_host}}" {
   var.server_name = "{{lgf_server_name}}"
 
   server.name = server_name
-  server.document-root = server_root + "/html/ideensammlung/ideensammlung"
+  server.document-root = server_root + "/html/{{lgf_server_name}}/{{lgf_server_name}}"
 
 
 $HTTP["url"] !~ "^/uploads/" {
   proxy.server = ( "" => (
-                   ( "host" => "127.0.0.1", "port" => 12345 )
+                   ( "host" => "127.0.0.1", "port" => {{lgf_gunicorn_port}} )
                  ) )
 }
 $HTTP["url"] =~ "^/{{lgf_media_dir}}" {
