@@ -13,16 +13,22 @@
     - python-virtualenvwrapper
 
 - name: clone the github-repository containing the python code
-  git: dest="{{app_dir}}" repo="{{repo}}" accept_hostkey=yes
+  git: dest="{{lgf_app_dir}}" repo="{{lgf_repo}}" accept_hostkey=yes
 
 - name: change owner of repo to lighttpd
-  file: path="{{app_dir}}" state=directory recurse=yes owner=lighttpd
+  file: path="{{lgf_app_dir}}" state=directory recurse=yes owner=lighttpd
 
 - name: install requirements for app
-  pip: requirements="{{app_dir}}/requirements.txt" virtualenv="{{virtualenv_dir}}" virtualenv_command=virtualenv
+  pip: requirements="{{lgf_app_dir}}/requirements.txt" virtualenv="{{lgf_virtualenv_dir}}" virtualenv_command=virtualenv
 
 - name: install gunicorn in virtualenv
-  pip: name=gunicorn virtualenv="{{virtualenv_dir}}"
+  pip: name=gunicorn virtualenv="{{lgf_virtualenv_dir}}"
+
+- name: create vhost-dir
+  file: dest="{{lgf_vhosts_dir}}" state=directory owner=root group=root mode=0644
+
+- name: copy vhost-configuration
+  template: src="vhost.conf.j2" dest="{{lgf_vhosts_dir}}/vhost.{{lgf_server_name}}.conf"
 
 - name: activate loading of vhosts
   lineinfile: dest="/etc/lighttpd/lighttpd.conf" line='include_shell "cat /etc/lighttpd/vhosts.d/*.conf"'
@@ -30,14 +36,8 @@
 - name: copy modified modules.conf in place
   copy: src="modules.conf" dest="/etc/lighttpd/modules.conf"
 
-- name: create vhost-dir
-  file: dest="{{vhosts_dir}}" state=directory owner=root group=root mode=0644
-
-- name: copy vhost-configuration
-  template: src="vhost.conf.j2" dest="{{vhosts_dir}}/vhost.conf"
-
 - name: copy supervisor config into place
-  template: src=supervisor.conf.j2 dest=/etc/supervisord.conf owner=root group=root mode=0640
+  template: src="supervisor.conf.j2" dest="/etc/supervisord.conf" owner=root group=root mode=0640
 
 - name: start lighttpd and supervisor
   service: name="{{item}}" state=started
@@ -46,10 +46,10 @@
     - lighttpd
 
 - name: start the app
-  command: "supervisorctl start {{server_name}}"
+  command: "supervisorctl start {{lgf_server_name}}"
 
 - name: enable autostart of programs at boot
-  service: name={{item}} enabled=yes
+  service: name="{{item}}" enabled=yes
   with_items:
     - supervisord
     - lighttpd

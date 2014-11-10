@@ -1,5 +1,5 @@
 $HTTP["host"] == "{{ansible_default_ipv4.address}}" {
-  var.server_name = "{{server_name}}"
+  var.server_name = "{{lgf_server_name}}"
 
   server.name = server_name
   server.document-root = server_root + "/html/ideensammlung/ideensammlung"
@@ -10,10 +10,10 @@ $HTTP["url"] !~ "^/uploads/" {
                    ( "host" => "127.0.0.1", "port" => 12345 )
                  ) )
 }
-$HTTP["url"] =~ "^/{{media_dir}}" {
+$HTTP["url"] =~ "^/{{lgf_media_dir}}" {
 
         alias.url = (
-            "/{{media_dir}}" => server.document-root + "/{{media_dir}}"
+            "/{{lgf_media_dir}}" => server.document-root + "/{{lgf_media_dir}}"
         )
 
 }

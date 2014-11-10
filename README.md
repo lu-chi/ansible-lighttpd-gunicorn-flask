@@ -1,4 +1,4 @@
-lighttpd-gunicorn-flask
+ansible-lighttpd-gunicorn-flask
 =========
 
 An Ansible role to install lighttpd and gunicorn and to deploy your custom flask application from github.
@@ -39,7 +39,7 @@ Example Playbook
 ```
 - hosts: webserver
   roles:
-  - role: lighttpd
+  - role: ansible-lighttpd-gunicorn-flask
 ```
 
 License
