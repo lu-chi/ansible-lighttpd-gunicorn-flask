@@ -39,8 +39,8 @@
 - name: copy supervisor config into place
   template: src="supervisor.conf.j2" dest="/etc/supervisord.conf" owner=root group=root mode=0640
 
-- name: start lighttpd and supervisor
-  service: name="{{item}}" state=started
+- name: restart lighttpd and supervisor
+  service: name="{{item}}" state=restarted
   with_items:
     - supervisord
     - lighttpd
