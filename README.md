@@ -1,7 +1,7 @@
 ansible-lighttpd-gunicorn-flask
 =========
 
-An Ansible role to install lighttpd and gunicorn and to deploy your custom flask application from github.
+An Ansible role to install lighttpd and gunicorn and to deploy your custom flask applications from github.
 
 Requirements
 ------------
@@ -12,21 +12,32 @@ Role Variables
 --------------
 
 ```
-# The github repo containing the python source code
-repo: "https://github.com/USER/REPO"
-
 # lighttpd settings
-server_name: "APP"
-vhosts_dir: "/etc/lighttpd/vhosts.d"
+lgf_vhosts_dir: "/etc/lighttpd/vhosts.d"
 
 # supervisor settings
-supervisor_password: "PASSWORD"
-supervisor_socket: "/tmp/supervisor.sock"
+lgf_supervisor_password: "PASSWORD"
+lgf_supervisor_socket: "/tmp/supervisor.sock"
 
-# python settigns
-virtualenv_dir: "/var/www/html/venv_APP"
-app_dir: "/var/www/html/APP"
-media_dir: "uploads"
+lgf_app:
+  - lgf_server_name: "APP1"
+    lgf_virtualenv_dir: "/var/www/html/venv_APP1"
+    lgf_app_dir: "/var/www/html/APP1"
+    lgf_media_dir: "/media"
+    lgf_gunicorn_port: "12345"
+    lgf_host: "192.168.100.25"
+    lgf_port: "80"
+    lgf_repo: "https://github.com/USER/APP1"
+
+  - lgf_server_name: "APP2"
+    lgf_virtualenv_dir: "/var/www/html/venv_APP2"
+    lgf_app_dir: "/var/www/html/APP2"
+    lgf_media_dir: "/media"
+    lgf_gunicorn_port: "12346"
+    lgf_host: "192.168.100.25"
+    lgf_port: "8080"
+    lgf_repo: "https://github.com/USER/APP2"
+
 ```
 
 Dependencies
