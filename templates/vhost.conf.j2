@@ -1,20 +1,20 @@
-$HTTP["host"] == "{{lgf_host}}" {
-  var.server_name = "{{lgf_server_name}}"
+$HTTP["host"] == "{{item.lgf_host}}" {
+  var.server_name = "{{item.lgf_server_name}}"
 
-  server.name = server_name
-  server.document-root = server_root + "/html/{{lgf_server_name}}/{{lgf_server_name}}"
+  server.name = "{{item.lgf_server_name}}"
+  server.port = "{{item.lgf_port|default(80)}}"
+  server.document-root = server_root + "/html/{{item.lgf_server_name}}/{{item.lgf_server_name}}"
 
 
-$HTTP["url"] !~ "^/uploads/" {
+$HTTP["url"] !~ "^{{item.lgf_media_dir}}/" {
   proxy.server = ( "" => (
-                   ( "host" => "127.0.0.1", "port" => {{lgf_gunicorn_port}} )
+                   ( "host" => "127.0.0.1", "port" => "{{item.lgf_gunicorn_port}}" )
                  ) )
 }
-$HTTP["url"] =~ "^/{{lgf_media_dir}}" {
+$HTTP["url"] =~ "^{{item.lgf_media_dir}}" {
 
         alias.url = (
-            "/{{lgf_media_dir}}" => server.document-root + "/{{lgf_media_dir}}"
+            "{{item.lgf_media_dir}}" => "server.document-root + {{item.lgf_media_dir}}"
         )
-
 }
 }

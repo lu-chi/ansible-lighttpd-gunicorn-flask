@@ -13,22 +13,32 @@
     - python-virtualenvwrapper
 
 - name: clone the github-repository containing the python code
-  git: dest="{{lgf_app_dir}}" repo="{{lgf_repo}}" accept_hostkey=yes
+  git: dest={{ item.lgf_app_dir }} repo="{{item.lgf_repo}}" accept_hostkey=yes
+  with_items:
+    - "{{lgf_app}}"
 
 - name: change owner of repo to lighttpd
-  file: path="{{lgf_app_dir}}" state=directory recurse=yes owner=lighttpd
+  file: path="{{item.lgf_app_dir}}" state=directory recurse=yes owner=lighttpd
+  with_items:
+    - "{{lgf_app}}"
 
 - name: install requirements for app
-  pip: requirements="{{lgf_app_dir}}/requirements.txt" virtualenv="{{lgf_virtualenv_dir}}" virtualenv_command=virtualenv
+  pip: requirements="{{item.lgf_app_dir}}/requirements.txt" virtualenv="{{item.lgf_virtualenv_dir}}" virtualenv_command=virtualenv
+  with_items:
+    - "{{lgf_app}}"
 
 - name: install gunicorn in virtualenv
-  pip: name=gunicorn virtualenv="{{lgf_virtualenv_dir}}"
+  pip: name=gunicorn virtualenv="{{item.lgf_virtualenv_dir}}"
+  with_items:
+    - "{{lgf_app}}"
 
 - name: create vhost-dir
   file: dest="{{lgf_vhosts_dir}}" state=directory owner=root group=root mode=0644
 
 - name: copy vhost-configuration
-  template: src="vhost.conf.j2" dest="{{lgf_vhosts_dir}}/vhost.{{lgf_server_name}}.conf"
+  template: src="vhost.conf.j2" dest={{lgf_vhosts_dir}}/vhost.{{item.lgf_server_name}}.conf
+  with_items:
+    - "{{lgf_app}}"
 
 - name: activate loading of vhosts
   lineinfile: dest="/etc/lighttpd/lighttpd.conf" line='include_shell "cat /etc/lighttpd/vhosts.d/*.conf"'
@@ -46,7 +56,9 @@
     - lighttpd
 
 - name: start the app
-  command: "supervisorctl start {{lgf_server_name}}"
+  command: "supervisorctl start {{item.lgf_server_name}}"
+  with_items:
+    - "{{lgf_app}}"
 
 - name: enable autostart of programs at boot
   service: name="{{item}}" enabled=yes

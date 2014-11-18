@@ -1,19 +1,16 @@
-# The github repo containing the python source code
-lgf_repo: "https://github.com/USER/REPO"
-
 # lighttpd settings
-lgf_server_name: "APP"
 lgf_vhosts_dir: "/etc/lighttpd/vhosts.d"
-lgf_host: "192.168.0.109"
 
 # supervisor settings
-lgf_supervisor_password: "PASSWORD"
+lgf_supervisor_password: "123"
 lgf_supervisor_socket: "/tmp/supervisor.sock"
 
-# gunicorn settings
-lgf_gunicorn_port: 12345
-
-# python settigns
-lgf_virtualenv_dir: "/var/www/html/venv_APP"
-lgf_app_dir: "/var/www/html/APP"
-lgf_media_dir: "uploads"
+lgf_app:
+  - lgf_server_name: ""
+    lgf_virtualenv_dir: ""
+    lgf_app_dir: ""
+    lgf_media_dir: ""
+    lgf_gunicorn_port: ""
+    lgf_host: ""
+    lgf_port: ""
+    lgf_repo: ""

@@ -43,8 +43,10 @@ password={{lgf_supervisor_password}}               ; should be same as http_pass
 ;prompt=mysupervisor         ; cmd line prompt (default "supervisor")
 ;history_file=~/.sc_history  ; use readline history if available
 
-[program:{{lgf_server_name}}]
-command={{lgf_virtualenv_dir}}/bin/gunicorn -b 127.0.0.1:{{lgf_gunicorn_port}} --error-logfile /var/log/lighttpd/{{lgf_server_name}}.log -u lighttpd -g lighttpd {{lgf_server_name}}:app
-process_name={{lgf_server_name}}
-directory={{lgf_app_dir}}
-environment=PYTHONPATH={{lgf_virtualenv_dir}}/bin
+{% for item in lgf_app %}
+[program:{{item.lgf_server_name}}]
+command={{item.lgf_virtualenv_dir}}/bin/gunicorn -b 127.0.0.1:{{item.lgf_gunicorn_port}} --error-logfile /var/log/lighttpd/{{item.lgf_server_name}}.log -u lighttpd -g lighttpd {{item.lgf_server_name}}:app
+process_name={{item.lgf_server_name}}
+directory={{item.lgf_app_dir}}
+environment=PYTHONPATH={{item.lgf_virtualenv_dir}}/bin
+{% endfor %}
