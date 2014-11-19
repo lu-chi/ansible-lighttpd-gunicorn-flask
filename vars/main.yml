@@ -7,9 +7,9 @@ lgf_supervisor_socket: "/tmp/supervisor.sock"
 
 lgf_app:
   - lgf_server_name: ""
-    lgf_virtualenv_dir: ""
-    lgf_app_dir: ""
-    lgf_media_dir: ""
+    lgf_virtualenv_dir: "" #use a full path here
+    lgf_app_dir: "" #use a full path here
+    lgf_media_dir: "" #use a full path here
     lgf_gunicorn_port: ""
     lgf_host: ""
     lgf_port: ""

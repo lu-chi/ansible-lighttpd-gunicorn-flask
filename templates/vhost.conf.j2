@@ -3,7 +3,7 @@ $HTTP["host"] == "{{item.lgf_host}}" {
 
   server.name = "{{item.lgf_server_name}}"
   server.port = "{{item.lgf_port|default(80)}}"
-  server.document-root = server_root + "/html/{{item.lgf_server_name}}/{{item.lgf_server_name}}"
+  server.document-root = "{{item.lgf_app_dir}}"
 
 
 $HTTP["url"] !~ "^{{item.lgf_media_dir}}/" {

@@ -50,18 +50,12 @@
   template: src="supervisor.conf.j2" dest="/etc/supervisord.conf" owner=root group=root mode=0640
 
 - name: restart lighttpd and supervisor
-  service: name="{{item}}" state=restarted
+  service: name="{{item}}" state=restarted  enabled=yes
   with_items:
     - supervisord
     - lighttpd
 
 - name: start the app
-  command: "supervisorctl start {{item.lgf_server_name}}"
+  supervisor: name="{{item.lgf_server_name}}" state=started
   with_items:
     - "{{lgf_app}}"
-
-- name: enable autostart of programs at boot
-  service: name="{{item}}" enabled=yes
-  with_items:
-    - supervisord
-    - lighttpd
