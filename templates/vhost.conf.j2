@@ -14,7 +14,7 @@ $HTTP["url"] !~ "^{{item.lgf_media_dir}}/" {
 $HTTP["url"] =~ "^{{item.lgf_media_dir}}" {
 
         alias.url = (
-            "{{item.lgf_media_dir}}" => "server.document-root + {{item.lgf_media_dir}}"
+            "{{item.lgf_media_dir}}" => server.document-root + "{{item.lgf_media_dir}}"
         )
 }
 }
