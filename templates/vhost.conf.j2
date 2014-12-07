@@ -8,7 +8,7 @@ $HTTP["host"] == "{{item.lgf_host}}" {
 
 $HTTP["url"] !~ "^{{item.lgf_media_dir}}/" {
   proxy.server = ( "" => (
-                   ( "host" => "127.0.0.1", "port" => "{{item.lgf_gunicorn_port}}" )
+                   ( "host" => "127.0.0.1", "port" => {{item.lgf_gunicorn_port}} )
                  ) )
 }
 $HTTP["url"] =~ "^{{item.lgf_media_dir}}" {
