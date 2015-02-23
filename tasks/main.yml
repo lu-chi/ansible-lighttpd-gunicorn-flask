@@ -1,61 +1,83 @@
 ---
-- name: Create the repository for EPEL
-  yum: name="epel-release" state=installed
 
-- name: Install all needed packages
-  yum: pkg="{{item}}" state=present
-  with_items:
-    - lighttpd
-    - lighttpd-fastcgi
-    - supervisor
-    - git
-    - python-pip
-    - python-virtualenvwrapper
+- include_vars: "{{ansible_os_family}}.yml"
 
-- name: clone the github-repository containing the python code
-  git: dest={{ item.lgf_app_dir }} repo="{{item.lgf_repo}}" accept_hostkey=yes
+- include: "Debian.install.yml"
+  when: ansible_os_family == "Debian"
+
+- include: "RedHat.install.yml"
+  when: ansible_os_family == "RedHat"
+
+- name: Copy SSH key
+  copy: src="{{item.ssh_keyfile}}" dest="/root/id_rsa_{{item.server_name}}" mode=0600
+  when: item.ssh_keyfile
   with_items:
     - "{{lgf_app}}"
 
-- name: change owner of repo to lighttpd
-  file: path="{{item.lgf_app_dir}}" state=directory recurse=yes owner=lighttpd
+- name: Clone git repository
+  git: dest={{ item.app_dir }} repo="{{item.repo}}" accept_hostkey=yes key_file="{% if item.ssh_keyfile %}/root/id_rsa_{{item.server_name}}{% endif %}"
   with_items:
     - "{{lgf_app}}"
 
-- name: install requirements for app
-  pip: requirements="{{item.lgf_app_dir}}/requirements.txt" virtualenv="{{item.lgf_virtualenv_dir}}" virtualenv_command=virtualenv
+- name: Remove SSH key
+  file: path="/root/id_rsa_{{item.server_name}}" state="absent"
+  when: item.ssh_keyfile
   with_items:
     - "{{lgf_app}}"
 
-- name: install gunicorn in virtualenv
-  pip: name=gunicorn virtualenv="{{item.lgf_virtualenv_dir}}"
+- name: Setup virtualenv (Python 2)
+  command: virtualenv {{item.virtualenv_dir}}
+  when: not item.python_3
   with_items:
     - "{{lgf_app}}"
 
-- name: create vhost-dir
+- name: Setup virtualenv (Python 3)
+  command: virtualenv -p python3 {{item.virtualenv_dir}}
+  when: item.python_3
+  with_items:
+    - "{{lgf_app}}"
+
+- name: pip install app requirements
+  pip: requirements="{{item.app_dir}}/requirements.txt" virtualenv="{{item.virtualenv_dir}}"
+  with_items:
+    - "{{lgf_app}}"
+
+- name: Install gunicorn
+  pip: name=gunicorn virtualenv="{{item.virtualenv_dir}}"
+  with_items:
+    - "{{lgf_app}}"
+
+# TODO: need a hook here to copy configuration files for the app
+
+- name: Change repo owner
+  file: path="{{item.app_dir}}" state=directory recurse=yes owner={{lgf_lighttpd_user}}
+  with_items:
+    - "{{lgf_app}}"
+
+- name: Create vhost-dir
   file: dest="{{lgf_vhosts_dir}}" state=directory owner=root group=root mode=0644
 
-- name: copy vhost-configuration
-  template: src="vhost.conf.j2" dest={{lgf_vhosts_dir}}/vhost.{{item.lgf_server_name}}.conf
+- name: Copy vhost-configuration
+  template: src="vhost.conf.j2" dest={{lgf_vhosts_dir}}/vhost.{{item.server_name}}.conf
   with_items:
     - "{{lgf_app}}"
 
-- name: activate loading of vhosts
+- name: Activate vhosts
   lineinfile: dest="/etc/lighttpd/lighttpd.conf" line='include_shell "cat /etc/lighttpd/vhosts.d/*.conf"'
 
-- name: copy modified modules.conf in place
-  copy: src="modules.conf" dest="/etc/lighttpd/modules.conf"
+- include: "Debian.config.yml"
+  when: ansible_os_family == "Debian"
 
-- name: copy supervisor config into place
-  template: src="supervisor.conf.j2" dest="/etc/supervisord.conf" owner=root group=root mode=0640
+- include: "RedHat.config.yml"
+  when: ansible_os_family == "RedHat"
 
-- name: restart lighttpd and supervisor
+- name: Restart lighttpd and supervisor
   service: name="{{item}}" state=restarted  enabled=yes
   with_items:
-    - supervisord
+    - supervisor
     - lighttpd
 
-- name: start the app
-  supervisor: name="{{item.lgf_server_name}}" state=started
+- name: Start the app
+  supervisorctl: name="{{item.server_name}}" state=started
   with_items:
     - "{{lgf_app}}"

@@ -8,8 +8,8 @@
 
 [unix_http_server]
 file={{lgf_supervisor_socket}}   ; (the path to the socket file)
-chown=lighttpd:lighttpd	    ; socket file uid:gid owner
-username=lighttpd              ; (default is no username (open server))
+chown={{lgf_lighttpd_user}}:{{lgf_lighttpd_user}}	    ; socket file uid:gid owner
+username={{lgf_lighttpd_user}}              ; (default is no username (open server))
 password={{lgf_supervisor_password}}   ; (default is no password (open server))
 
 [supervisord]
@@ -22,7 +22,7 @@ nodaemon=false               ; (start in foreground if true;default false)
 minfds=1024                  ; (min. avail startup file descriptors;default 1024)
 minprocs=200                 ; (min. avail process descriptors;default 200)
 ;umask=022                   ; (process file creation umask;default 022)
-user=lighttpd		    ; (default is current user, required if root)
+user={{lgf_lighttpd_user}}   ; (default is current user, required if root)
 ;identifier=supervisor       ; (supervisord identifier, default is 'supervisor')
 ;directory=/tmp              ; (default is not to cd during start)
 ;nocleanup=true              ; (don't clean up tempfiles at start;default false)
@@ -38,15 +38,15 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 
 [supervisorctl]
 serverurl=unix://{{lgf_supervisor_socket}} ; use a unix:// URL  for a unix socket
-username=lighttpd		; should be same as http_username if set
+username={{lgf_lighttpd_user}}		; should be same as http_username if set
 password={{lgf_supervisor_password}}               ; should be same as http_password if set
 ;prompt=mysupervisor         ; cmd line prompt (default "supervisor")
 ;history_file=~/.sc_history  ; use readline history if available
 
 {% for item in lgf_app %}
-[program:{{item.lgf_server_name}}]
-command={{item.lgf_virtualenv_dir}}/bin/gunicorn -b 127.0.0.1:{{item.lgf_gunicorn_port}} --error-logfile /var/log/lighttpd/{{item.lgf_server_name}}.log -u lighttpd -g lighttpd {{item.lgf_server_name}}:app
-process_name={{item.lgf_server_name}}
-directory={{item.lgf_app_dir}}
-environment=PYTHONPATH={{item.lgf_virtualenv_dir}}/bin
+[program:{{item.server_name}}]
+command={{item.virtualenv_dir}}/bin/gunicorn -b 127.0.0.1:{{item.gunicorn_port}} --error-logfile /var/log/lighttpd/{{item.server_name}}.log -u {{lgf_lighttpd_user}} -g {{lgf_lighttpd_user}} {{item.flask_app}}:app
+process_name={{item.server_name}}
+directory={{item.app_dir}}
+environment=PYTHONPATH={{item.virtualenv_dir}}/bin
 {% endfor %}

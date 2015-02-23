@@ -1,0 +1,12 @@
+---
+
+- name: Install packages
+  apt: pkg="{{item}}" state=present
+  with_items:
+    - lighttpd
+    - supervisor
+    - git
+    - python-pip
+    - python3
+    - python3-pip
+    - python-virtualenv

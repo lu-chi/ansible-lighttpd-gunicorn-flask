@@ -1,0 +1,20 @@
+# lighttpd settings
+
+lgf_vhosts_dir: "/etc/lighttpd/vhosts.d"
+
+# supervisor settings (not currently implemented on Debian)
+lgf_supervisor_password: "PASSWORD"
+lgf_supervisor_socket: "/tmp/supervisor.sock"
+
+lgf_app:
+  - server_name: "app"
+    flask_app: "wsgi"
+    host: "127.0.0.1"
+    port: "80"
+    app_dir: "/var/www/html/app"
+    virtualenv_dir: "/var/www/html/app/env"
+    media_dir: "/media"
+    python_3: false
+    gunicorn_port: "12345"
+    repo: "git@github.com:{user}/{repo-name}"
+    ssh_keyfile: ""

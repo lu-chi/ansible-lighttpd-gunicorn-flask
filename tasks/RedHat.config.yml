@@ -1,0 +1,7 @@
+---
+
+- name: Copy modified modules.conf
+  copy: src="modules.conf" dest="/etc/lighttpd/modules.conf"
+
+- name: Copy supervisor config
+  template: src="supervisor.conf.j2" dest="/etc/supervisord.conf" owner=root group=root mode=0640

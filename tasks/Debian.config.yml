@@ -1,0 +1,7 @@
+---
+
+- name: Enable lighttpd modules
+  command: lighty-enable-mod accesslog proxy creates=/etc/lighttpd/conf-enabled/10-proxy.conf
+
+- name: Configure supervisor
+  template: src="supervisor.programs.conf.j2" dest="/etc/supervisor/conf.d/programs.conf" owner=root group=root mode=0640

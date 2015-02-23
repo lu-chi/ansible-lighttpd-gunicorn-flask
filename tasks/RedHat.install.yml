@@ -1,0 +1,16 @@
+---
+
+- name: Create the repository for EPEL
+  yum: name="epel-release" state=installed
+
+- name: Install packages
+  yum: pkg="{{ item }}" state=present
+  with_items:
+    - lighttpd
+    - lighttpd-fastcgi
+    - supervisor
+    - git
+    - python3
+    - python-pip
+    - python3-pip
+    - python-virtualenvwrapper
