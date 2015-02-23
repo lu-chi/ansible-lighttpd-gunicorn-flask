@@ -1,3 +1,4 @@
 ---
 
 lgf_lighttpd_user: "lighttpd"
+lgf_lighttpd_group: "lighttpd"
