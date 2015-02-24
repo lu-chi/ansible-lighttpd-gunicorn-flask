@@ -8,7 +8,7 @@
 - include: "RedHat.install.yml"
   when: ansible_os_family == "RedHat"
 
-- name: Copy SSH key
+- name: Copy git SSH key
   copy: src="{{item.ssh_keyfile}}" dest="/root/id_rsa_{{item.server_name}}" mode=0600
   when: item.ssh_keyfile
   with_items:
@@ -19,7 +19,14 @@
   with_items:
     - "{{lgf_app}}"
 
-- name: Remove SSH key
+- name: Copy app files
+  copy: src="{{item.1.src}}" dest="{{item.0.app_dir}}/{{item.1.dest}}"
+  when: item.1.src
+  with_subelements:
+    - "{{lgf_app}}"
+    - extra_files
+
+- name: Remove git SSH key
   file: path="/root/id_rsa_{{item.server_name}}" state="absent"
   when: item.ssh_keyfile
   with_items:
@@ -49,7 +56,7 @@
 
 # TODO: need a hook here to copy configuration files for the app
 
-- name: Change repo owner
+- name: Change app owner
   file: path="{{item.app_dir}}" state=directory recurse=yes owner={{lgf_lighttpd_user}} group={{lgf_lighttpd_group}}
   with_items:
     - "{{lgf_app}}"

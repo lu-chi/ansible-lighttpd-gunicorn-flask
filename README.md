@@ -29,13 +29,16 @@ lgf_app:
     flask_app: "wsgi"
     host: "127.0.0.1"
     port: "80"
+    gunicorn_port: "12345"
     app_dir: "/var/www/html/app"
     virtualenv_dir: "/var/www/html/app/env"
     media_dir: "/media"   # inside {{ app_dir }}
     python_3: false
-    gunicorn_port: "12345"
     repo: "git@github.com:{user}/{repo-name}"
     ssh_keyfile: ""
+    extra_files:
+      - src: "app-settings-config.py"
+        dest: "config.py"
   
   - ...
 
