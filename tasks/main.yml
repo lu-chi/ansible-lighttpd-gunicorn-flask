@@ -20,7 +20,7 @@
     - "{{lgf_app}}"
 
 - name: Copy app files
-  copy: src="{{item.1.src}}" dest="{{item.0.app_dir}}/{{item.1.dest}}"
+  template: src="{{item.1.src}}" dest="{{item.0.app_dir}}/{{item.1.dest}}"
   when: item.1.src
   with_subelements:
     - "{{lgf_app}}"
