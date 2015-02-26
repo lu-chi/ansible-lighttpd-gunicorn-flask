@@ -77,7 +77,7 @@
   when: ansible_os_family == "RedHat"
 
 - name: Restart lighttpd and supervisor
-  service: name="{{item}}" state=restarted  enabled=yes
+  service: name="{{item}}" state=restarted  enabled=yes sleep=1
   with_items:
     - supervisor
     - lighttpd

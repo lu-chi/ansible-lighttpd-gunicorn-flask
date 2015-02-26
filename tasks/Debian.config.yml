@@ -4,4 +4,7 @@
   command: lighty-enable-mod accesslog proxy creates=/etc/lighttpd/conf-enabled/10-proxy.conf
 
 - name: Configure supervisor
+  template: src="supervisor.conf.Debian.j2" dest="/etc/supervisor/supervisord.conf" owner=root group=root mode=0640
+
+- name: Configure supervisor programs
   template: src="supervisor.programs.conf.j2" dest="/etc/supervisor/conf.d/programs.conf" owner=root group=root mode=0640

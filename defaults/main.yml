@@ -2,8 +2,8 @@
 
 lgf_vhosts_dir: "/etc/lighttpd/vhosts.d"
 
-# supervisor settings (not currently implemented on Debian)
-lgf_supervisor_password: "PASSWORD"
+# supervisor settings
+lgf_supervisor_password: "a-passw0rd-that-you-5hould-change!"
 lgf_supervisor_socket: "/tmp/supervisor.sock"
 
 lgf_app:
