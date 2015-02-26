@@ -33,13 +33,13 @@
     - "{{lgf_app}}"
 
 - name: Setup virtualenv (Python 2)
-  command: virtualenv {{item.virtualenv_dir}}
+  command: virtualenv {{item.virtualenv_dir}} creates="{{item.virtualenv_dir}}"
   when: not item.python_3
   with_items:
     - "{{lgf_app}}"
 
 - name: Setup virtualenv (Python 3)
-  command: virtualenv -p python3 {{item.virtualenv_dir}}
+  command: virtualenv -p python3 {{item.virtualenv_dir}} creates="{{item.virtualenv_dir}}"
   when: item.python_3
   with_items:
     - "{{lgf_app}}"
