@@ -54,8 +54,6 @@
   with_items:
     - "{{lgf_app}}"
 
-# TODO: need a hook here to copy configuration files for the app
-
 - name: Change app owner
   file: path="{{item.app_dir}}" state=directory recurse=yes owner={{lgf_lighttpd_user}} group={{lgf_lighttpd_group}}
   with_items:
