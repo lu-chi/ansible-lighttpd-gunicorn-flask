@@ -19,7 +19,7 @@ Role Variables
 # lighttpd settings
 lgf_vhosts_dir: "/etc/lighttpd/vhosts.d"
 
-# supervisor settings (not currently used on Debian)
+# supervisor settings
 lgf_supervisor_password: "PASSWORD"
 lgf_supervisor_socket: "/tmp/supervisor.sock"
 
@@ -43,6 +43,14 @@ lgf_app:
   - ...
 
 ```
+
+Notes:
+
+- `lgf_app.server_name`: Used througout the configuration to refer to your app; for example log-files named _server-name.access.log_ will be created inside lighttpd's log directory, so don't use spaces in this name
+- `lgf_app.flask_app`: The name of the main Flask app module
+- `lgf_app.media_dir`: Directory inside the app-dir that will not be proxied through gunicorn, but directly served by lighttpd
+- `lgf_app.ssh_keyfile`: A file with an SSH key that allows to clone a private GitHub repo
+- `lgf_app.extra_files`: Files, treated as templates with "item.0" as lgf_app dict and "item.1" as extra_file dict, that will be copied into the app directory
 
 Dependencies
 ------------
