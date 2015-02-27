@@ -1,19 +1,23 @@
-$HTTP["host"] == "{{item.host}}" {
-  var.server_name = "{{item.server_name}}"
-
+$SERVER["socket"] == "{{item.proxy_host|default()}}:{{item.proxy_port|default(80)}}" {
+{% if item.media_dir %}
   server.name = "{{item.server_name}}"
-  server.port = "{{item.port|default(80)}}"
+  server.port = "{{item.proxy_port|default(80)}}"
   server.document-root = "{{item.app_dir}}"
 
   $HTTP["url"] !~ "^{{item.media_dir}}" {
+{% endif %}
     proxy.server = ("" => (
-        ("host" => "127.0.0.1",
-         "port" => {{item.gunicorn_port}})
+      "{{item.server_name}}" => (
+        "host" => "127.0.0.1",
+        "port" => {{item.gunicorn_port}}
+      )
     ))
+{% if item.media_dir %}
   }
   $HTTP["url"] =~ "^{{item.media_dir}}" {
     alias.url = (
       "{{item.media_dir}}" => server.document-root + "{{item.media_dir}}"
     )
   }
+{% endif %}
 }

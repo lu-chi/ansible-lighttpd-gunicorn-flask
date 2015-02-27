@@ -1,16 +1,18 @@
-# lighttpd settings
+---
 
+# lighttpd settings
 lgf_vhosts_dir: "/etc/lighttpd/vhosts.d"
 
 # supervisor settings
 lgf_supervisor_password: "a-passw0rd-that-you-5hould-change!"
 lgf_supervisor_socket: "/tmp/supervisor.sock"
 
+# our list of apps
 lgf_app:
   - server_name: "app"
     flask_app: "wsgi"
-    host: "127.0.0.1"
-    port: "80"
+    proxy_host: "127.0.0.1"
+    proxy_port: "80"
     gunicorn_port: "12345"
     app_dir: "/var/www/html/app"
     virtualenv_dir: "/var/www/html/app/env"

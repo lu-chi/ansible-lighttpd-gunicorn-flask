@@ -27,11 +27,14 @@ lgf_supervisor_socket: "/tmp/supervisor.sock"
 lgf_app:
   - server_name: "app"
     flask_app: "wsgi"
-    host: "127.0.0.1"
-    port: "80"
+    proxy_host: "127.0.0.1"
+    proxy_port: "80"
     gunicorn_port: "12345"
     app_dir: "/var/www/html/app"
     virtualenv_dir: "/var/www/html/app/env"
+    # a media_dir will not run through wsgi and will prompt
+    # lighttpd to spin up a server on the specified port.
+    # set to "" if you don't need it
     media_dir: "/media"   # inside {{ app_dir }}
     python_3: false
     repo: "git@github.com:{user}/{repo-name}"
