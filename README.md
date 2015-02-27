@@ -30,6 +30,7 @@ lgf_app:
     proxy_host: "127.0.0.1"
     proxy_port: "80"
     gunicorn_port: "12345"
+    gunicorn_threads: "3"
     app_dir: "/var/www/html/app"
     virtualenv_dir: "/var/www/html/app/env"
     # a media_dir will not run through wsgi and will prompt

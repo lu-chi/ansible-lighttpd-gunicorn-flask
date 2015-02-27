@@ -1,7 +1,8 @@
 {% for item in lgf_app %}
 [program:{{item.server_name}}]
-command={{item.virtualenv_dir}}/bin/gunicorn -b 127.0.0.1:{{item.gunicorn_port}} --access-logfile /var/log/lighttpd/{{item.server_name}}.access.log --error-logfile /var/log/lighttpd/{{item.server_name}}.error.log -u {{lgf_lighttpd_user}} -g {{lgf_lighttpd_group}} {{item.flask_app}}:app
+command={{item.virtualenv_dir}}/bin/gunicorn -b 127.0.0.1:{{item.gunicorn_port}} --threads {{item.gunicorn_threads|default(3)}} --access-logfile /var/log/lighttpd/{{item.server_name}}.access.log --error-logfile /var/log/lighttpd/{{item.server_name}}.error.log -u {{lgf_lighttpd_user}} -g {{lgf_lighttpd_group}} {{item.flask_app}}:app
 process_name={{item.server_name}}
 directory={{item.app_dir}}
 environment=PYTHONPATH={{item.virtualenv_dir}}/bin
+
 {% endfor %}
